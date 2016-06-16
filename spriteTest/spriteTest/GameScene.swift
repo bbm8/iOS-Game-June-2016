@@ -21,6 +21,8 @@ class GameScene: SKScene {
 
     var paths : [UIBezierPath] = [UIBezierPath(),UIBezierPath()] // array of paths for the hills to follow. There always will be only two
     var slopes : [SKShapeNode] = [SKShapeNode(),SKShapeNode()] //array of nodes for the paths
+    
+    var lastCriticalPoint : CGFloat = 100
 
     override func didMoveToView(view: SKView) {
 
@@ -82,12 +84,16 @@ class GameScene: SKScene {
         paths.removeAtIndex(0)//removes path that is out of view
         paths.append(UIBezierPath())//adds new default bezier path to array
         
+        let temp = CGFloat(arc4random() % 500)//next critical point
+        
         //gives newly generated bezier path a randomly generated path
         paths[1].moveToPoint(CGPointMake(0, -self.frame.height/2))
         paths[1].addLineToPoint(CGPointMake(0, 0))
-        paths[1].addCurveToPoint(CGPointMake(self.frame.width, 0), controlPoint1: CGPointMake(self.frame.width/3, CGFloat(arc4random() % 500)), controlPoint2: CGPointMake(self.frame.width*2/3, -CGFloat(arc4random() % 500)))
+        paths[1].addCurveToPoint(CGPointMake(self.frame.width, 0), controlPoint1: CGPointMake(self.frame.width/3, lastCriticalPoint), controlPoint2: CGPointMake(self.frame.width*2/3, -temp))
         paths[1].addLineToPoint(CGPointMake(self.frame.width,-self.frame.height/2))
         paths[1].closePath()
+        
+        lastCriticalPoint = temp//update last critical point (used to make hills differentiable
     }
     func setupSun()
     {
